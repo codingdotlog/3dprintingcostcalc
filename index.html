@@ -17,85 +17,136 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
 
+
     <form>
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="">Dolar (Currency)</label>
-                <input type="email" class="form-control" name="">
+                <input type="number" class="form-control" id="dolar" placeholder="">
             </div>
             <div class="form-group col-md-6">
                 <label for="">Filament KG Price</label>
-                <input type="password" class="form-control" name="">
+                <input type="number" class="form-control" id="material" placeholder="13">
             </div>
         </div>
         <div class="form-row">
             <div class="form-group col-md-3">
                 <label for="">Printer Price</label>
-                <input type="number" class="form-control" name="">
+                <input type="number" class="form-control" id="printer" placeholder="500">
             </div>
             <div class="form-group col-md-3">
                 <label for="">Electricity Cost / kW</label>
-                <input type="number" class="form-control" name="">
+                <input type="number" class="form-control" id="electricity" placeholder="1.08">
             </div>
             <div class="form-group col-md-2">
                 <label for="">Years</label>
-                <input type="number" class="form-control" name="">
+                <input type="number" class="form-control" id="years" placeholder="1">
             </div>
             <div class="form-group col-md-2">
                 <label for="">Active Days In Year</label>
-                <input type="number" class="form-control" name="">
+                <input type="number" class="form-control" id="days" placeholder="299">
             </div>
             <div class="form-group col-md-2">
                 <label for="">Active Working Hours In Day</label>
-                <input type="number" class="form-control" name="">
+                <input type="number" class="form-control" id="hours" placeholder="8">
             </div>
         </div>
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="">Failure Percentage %</label>
-                <input type="email" class="form-control" name="">
+                <input type="number" class="form-control" id="failure" placeholder="0.10">
             </div>
             <div class="form-group col-md-6">
                 <label for="">Material Loss (Filament)</label>
-                <input type="password" class="form-control" name="">
+                <input type="number" class="form-control" id="loss" placeholder="0.010">
             </div>
         </div>
         <div class="form-row">
             <div class="form-group col-md-4">
                 <label for="">Operator Cost</label>
-                <input type="number" class="form-control" name="">
+                <input type="number" class="form-control" id="operator" placeholder="2">
             </div>
             <div class="form-group col-md-4">
                 <label for="">Pre Work</label>
-                <input type="number" class="form-control" name="">
+                <input type="number" class="form-control" id="pre" placeholder="0.50">
             </div>
             <div class="form-group col-md-4">
                 <label for="">Post Work</label>
-                <input type="number" class="form-control" name="">
+                <input type="number" class="form-control" id="post" placeholder="0.40">
             </div>
         </div>
         <div class="dropdown-divider"></div>
         <div class="form-row">
             <div class="form-group col-md-4">
                 <label for="">Width</label>
-                <input type="number" class="form-control" name="">
+                <input type="number" class="form-control" id="width">
             </div>
             <div class="form-group col-md-4">
-                <label for="">Heighy</label>
-                <input type="number" class="form-control" name="">
+                <label for="">Height</label>
+                <input type="number" class="form-control" id="height">
             </div>
             <div class="form-group col-md-4">
                 <label for="">Length</label>
-                <input type="number" class="form-control" name="">
+                <input type="number" class="form-control" id="length">
             </div>
         </div>
         <div class="form-group">
             <label for="">Printing Duration (Hours)</label>
-            <input type="text" class="form-control" name="">
+            <input type="text" class="form-control" id="duration" placeholder="4">
         </div>
-        <button type="submit" class="btn btn-primary">Calculate</button>
+        <a class="btn btn-primary" onClick="calc();">Calculate</a>
     </form>
     <br />
     <h3></h3>
     </body>
 </html>
+
+<script>
+
+
+function calc() {
+
+
+    //Currency
+    var dolar = document.getElementById("dolar").value;
+    //
+    var material = document.getElementById("material").value;
+    var electricity = document.getElementById("electricity").value;
+    //Amortization Cost
+    var printer = document.getElementById("printer").value;
+    var years = document.getElementById("years").value;
+    var days = document.getElementById("days").value;
+    var hours = document.getElementById("hours").value;
+    var amortization = (printer/(years*days*hours));
+    //Failure Cost
+    var failure = document.getElementById("failure").value;
+    var loss = document.getElementById("loss").value;
+    //Operator Cost
+    var operator = document.getElementById("operator").value;
+    var pre = document.getElementById("pre").value;
+    var post = document.getElementById("post").value;
+    //
+    //Weight Calc
+    var width = document.getElementById("width").value;
+    var height = document.getElementById("height").value;
+    var length = document.getElementById("length").value;
+    //
+    var weight = (width * height * length)/3000;
+    //
+    var duration = document.getElementById("duration").value;
+    //ALL CALCULATIONS
+    var calc_material = (material * weight) / 1000;
+    var calc_electricity = electricity * duration;
+    var calc_operator = (operator * pre) + (operator * post);
+    var calc_amortization = amortization * duration;
+    var calc_failure = ((calc_material + calc_electricity + calc_operator + calc_amortization) * (failure + loss));
+
+    //FINAL COST
+    var total = ((calc_material + calc_electricity + calc_operator + calc_amortization + calc_failure) * dolar);
+    //
+    alert(total);
+
+
+
+}
+</script>
